@@ -1,0 +1,11 @@
+# 忽略包含敏感信息的配置文件
+frontend/api/includes/config.php
+Iot/config.py
+
+# 常见忽略文件和目录
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+*.log

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>零点跃迁停车场管理系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        // 防止缓存的函数
+        function loadWithCacheBust(url, type) {
+            const timestamp = new Date().getTime();
+            const bustUrl = url + '?v=' + timestamp;
+            
+            if (type === 'css') {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = bustUrl;
+                document.head.appendChild(link);
+            } else if (type === 'js') {
+                const script = document.createElement('script');
+                script.src = bustUrl;
+                script.async = false; // 确保脚本按顺序加载
+                document.body.appendChild(script);
+            }
+        }
+
+        // 加载样式
+        //loadWithCacheBust('css/style.css', 'css');
+        
+        // 当页面加载完成后加载脚本
+        window.addEventListener('DOMContentLoaded', function() {
+            // 添加刷新按钮
+            const header = document.querySelector('header');
+            const refreshBtn = document.createElement('button');
+            refreshBtn.className = 'refresh-btn';
+            refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 刷新页面';
+            refreshBtn.addEventListener('click', function() {
+                // 显示刷新中的动画
+                this.disabled = true;
+                this.innerHTML = '<i class="fas fa-sync-alt"></i> 刷新中...';
+                
+                // 清除缓存并重新加载
+                if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                        return Promise.all(names.map(function(name) {
+                            return caches.delete(name);
+                        }));
+                    }).then(function() {
+                        // 使用强制刷新，忽略缓存
+                        window.location.reload(true);
+                    });
+                } else {
+                    // 如果不支持Cache API，直接刷新
+                    window.location.reload(true);
+                }
+            });
+            header.appendChild(refreshBtn);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-parking"></i>零点跃迁停车场</h1>
+            <div id="user-status" class="user-status-container">
+                <!-- 用户状态将由JS动态生成 -->
+                <button class="login-btn" onclick="window.location.href='login.html'">登录/注册</button>
+            </div>
+        </header>
+        
+        <main>
+            <div class="floor-section">
+                <div class="floor-buttons">
+                    <button class="floor-button active" data-floor="B1" onclick="switchFloor('B1')">B1层</button>
+                    <button class="floor-button" data-floor="B2" onclick="switchFloor('B2')">B2层</button>
+                    <button class="floor-button" data-floor="B3" onclick="switchFloor('B3')">B3层</button>
+                </div>
+            </div>
+            
+            <div id="parking-stats" class="parking-stats">
+                <!-- 停车场统计信息将由JS动态生成 -->
+            </div>
+            
+            <div id="parking-container" class="parking-container">
+                <!-- 停车场布局将由JS动态生成 -->
+                <div class="loading">
+                    <svg class="icon-spinner" viewBox="0 0 512 512" width="32" height="32">
+                        <path fill="#3498db" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z">
+                            <animateTransform attributeName="transform" type="rotate" from="0 256 256" to="360 256 256" dur="1s" repeatCount="indefinite"/>
+                        </path>
+                    </svg>
+                    <span>正在加载车位信息...</span>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p style="text-align: center;">&copy; 2025 零点跃迁停车场管理系统</p>
+        </footer>
+    </div>
+    
+    <!-- 简单的楼层切换函数，避免事件绑定问题 -->
+    <script>
+        function switchFloor(floor) {
+            console.log('切换到楼层:', floor);
+            // 更新按钮样式
+            document.querySelectorAll('.floor-button').forEach(btn => {
+                if (btn.dataset.floor === floor) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // 如果已加载脚本，调用fetchParkingData函数
+            if (typeof window.fetchParkingData === 'function') {
+                window.currentFloor = floor;
+                window.fetchParkingData(floor);
+                
+                if (window.debugLog) {
+                    window.debugLog(`通过直接点击切换到楼层: ${floor}`);
+                }
+            } else {
+                console.error('未找到fetchParkingData函数，脚本可能未加载');
+                alert('系统加载中，请稍后再试...');
+            }
+        }
+    </script>
+    
+    <!-- 设置默认显示调试信息 -->
+    <script>
+        window.showDebugInfo = true;
+    </script>
+    
+    <!-- 引入主脚本文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script>
+        // 使用时间戳加载脚本以避免缓存问题
+        document.write('<script src="js/script.js?v=' + new Date().getTime() + '"><\/script>');
+    </script>
+</body>
+</html> 

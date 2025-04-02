@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - 智能停车场管理系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .register-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .register-button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .register-button:hover {
+            background-color: #0069d9;
+        }
+        
+        .register-options {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .register-options a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .register-options a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-parking"></i>零点跃迁停车场</h1>
+        </header>
+        
+        <div class="register-container">
+            <h2>用户注册</h2>
+            
+            <div id="error-message" class="error-message"></div>
+            
+            <div class="form-group">
+                <label for="name">姓名</label>
+                <input type="text" id="name" name="name" placeholder="请输入您的姓名" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">手机号码</label>
+                <input type="tel" id="phone" name="phone" placeholder="请输入手机号码" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm-password">确认密码</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="请再次输入密码" required>
+            </div>
+            
+            <button id="register-button" class="register-button">注册</button>
+            
+            <div class="register-options">
+                <a href="login.html">已有账号？返回登录</a>
+                <a href="index.html">返回首页</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p style="text-align: center;">&copy; 2025 零点跃迁停车场管理系统</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerButton = document.getElementById('register-button');
+            const errorMessage = document.getElementById('error-message');
+            
+            registerButton.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                // 验证输入
+                if (!name || !phone || !password || !confirmPassword) {
+                    showError('请填写所有必填字段');
+                    return;
+                }
+                
+                if (!phone.match(/^1[3-9]\d{9}$/)) {
+                    showError('请输入有效的手机号码');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showError('两次输入的密码不一致');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showError('密码长度不能少于6位');
+                    return;
+                }
+                
+                try {
+                    // 发送注册请求
+                    const response = await fetch('./api/register.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            phone: phone,
+                            password: password
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert('注册成功！请登录');
+                        window.location.href = 'login.html';
+                    } else {
+                        showError(result.error || '注册失败');
+                    }
+                    
+                } catch (error) {
+                    showError('注册失败: ' + error.message);
+                }
+            });
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html> 

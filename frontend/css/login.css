@@ -1,0 +1,145 @@
+/* 登录/注册页面样式 */
+.back-button {
+    margin-bottom: 20px;
+}
+
+.back-button a {
+    display: inline-flex;
+    align-items: center;
+    color: var(--dark-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.back-button a:hover {
+    color: var(--primary-color);
+}
+
+.back-button svg {
+    margin-right: 5px;
+}
+
+.auth-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.auth-container h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--secondary-color);
+    font-size: 1.8rem;
+}
+
+/* 标签页导航 */
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #777;
+    transition: all 0.3s;
+}
+
+.tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab:hover:not(.active) {
+    color: #333;
+    background-color: rgba(0,0,0,0.02);
+}
+
+/* 表单样式 */
+.auth-form {
+    padding: 10px 0;
+}
+
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    color: var(--dark-color);
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.auth-form input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.auth-form input::placeholder {
+    color: #aaa;
+}
+
+.auth-form .submit-btn {
+    width: 100%;
+    padding: 13px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 15px;
+}
+
+.auth-form .submit-btn:hover {
+    background-color: #2980b9;
+}
+
+/* 响应式调整 */
+@media (min-width: 768px) {
+    .auth-container {
+        max-width: 450px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 20px 15px;
+    }
+    
+    .auth-container h1 {
+        font-size: 1.5rem;
+    }
+    
+    .tab {
+        padding: 10px 5px;
+        font-size: 14px;
+    }
+} 

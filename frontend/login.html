@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 智能停车场管理系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .login-button:hover {
+            background-color: #0069d9;
+        }
+        
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .login-options a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .login-options a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-parking"></i>零点跃迁停车场</h1>
+        </header>
+        
+        <div class="login-container">
+            <h2>用户登录</h2>
+            
+            <div id="error-message" class="error-message"></div>
+            
+            <div class="form-group">
+                <label for="phone">手机号码</label>
+                <input type="tel" id="phone" name="phone" placeholder="请输入手机号码" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required>
+            </div>
+            
+            <button id="login-button" class="login-button">登录</button>
+            
+            <div class="login-options">
+                <a href="register.html">注册新账号</a>
+                <a href="index.html">返回首页</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p style="text-align: center;">&copy; 2025 零点跃迁停车场管理系统</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-button');
+            const errorMessage = document.getElementById('error-message');
+            
+            loginForm.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                const phone = document.getElementById('phone').value;
+                const password = document.getElementById('password').value;
+                
+                // 验证输入
+                if (!phone || !password) {
+                    showError('请输入手机号和密码');
+                    return;
+                }
+                
+                if (!phone.match(/^1[3-9]\d{9}$/)) {
+                    showError('请输入有效的手机号码');
+                    return;
+                }
+                
+                try {
+                    // 发送登录请求
+                    const response = await fetch('./api/login.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            phone: phone,
+                            password: password
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // 登录成功，将用户信息保存到本地存储
+                        localStorage.setItem('parkingUser', JSON.stringify(result.user));
+                        
+                        // 重定向到首页
+                        window.location.href = 'index.html';
+                    } else {
+                        showError(result.error || '登录失败');
+                    }
+                    
+                } catch (error) {
+                    showError('登录失败: ' + error.message);
+                }
+            });
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,282 @@
+/* 用户中心页面样式 */
+.back-button {
+    margin-bottom: 15px;
+}
+
+.back-button a {
+    display: inline-flex;
+    align-items: center;
+    color: var(--dark-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.back-button a:hover {
+    color: var(--primary-color);
+}
+
+.back-button svg {
+    margin-right: 5px;
+}
+
+/* 用户头部 */
+.user-header {
+    background-color: var(--secondary-color);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: white;
+    text-align: center;
+}
+
+.user-header h1 {
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+#user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar {
+    width: 70px;
+    height: 70px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    color: white;
+}
+
+#profile-name {
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+}
+
+#profile-phone {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* 内容区块 */
+.content-section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.content-section h2 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* 预约详情 */
+.reservation-details {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.reservation-status {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.icon-status {
+    margin-right: 8px;
+}
+
+.reservation-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.reservation-info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.reservation-info-item label {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.reservation-info-item span {
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+.countdown {
+    color: var(--danger-color);
+    font-weight: bold;
+}
+
+.reservation-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+}
+
+.action-btn {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.success-btn {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.action-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.no-data {
+    text-align: center;
+    padding: 30px 20px;
+    color: #777;
+}
+
+.no-data p {
+    margin-bottom: 15px;
+}
+
+.no-data .action-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+/* 历史记录 */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.history-item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.history-status {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.history-status svg {
+    margin-right: 5px;
+}
+
+.history-status.completed {
+    color: var(--success-color);
+}
+
+.history-status.expired {
+    color: var(--danger-color);
+}
+
+.history-status.canceled {
+    color: #777;
+}
+
+.history-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: var(--dark-color);
+}
+
+.history-info p {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.history-time {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* 响应式调整 */
+@media (min-width: 768px) {
+    .user-header {
+        display: flex;
+        text-align: left;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .user-header h1 {
+        margin-bottom: 0;
+    }
+    
+    #user-info {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .avatar {
+        margin-bottom: 0;
+        margin-right: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .reservation-info-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .reservation-actions {
+        flex-direction: column;
+    }
+    
+    .history-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .history-time {
+        margin-top: 5px;
+    }
+} 

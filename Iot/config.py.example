@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# 数据库配置
+DB_CONFIG = {
+    'host': '***',
+    'user': '***',
+    'password': '***',
+    'database': '***',
+    'port': 3306
+}
+
+# 输出目录配置
+OUTPUT_DIRS = {
+    'image_output': 'results/images',
+    'video_output': 'results/videos',
+    'camera_output': 'results/camera'
+}
+
+# 处理配置
+PROCESS_CONFIG = {
+    'video_interval': 10,  # 视频模式每隔10秒处理一帧
+    'camera_interval': 10,  # 摄像头模式每隔10秒处理一帧
+    'parking_layer':'b1' # 当前停车场层数，据此上传数据到不同的数据库表
+}

@@ -1,0 +1,1128 @@
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --font-family: 'Helvetica Neue', Arial, sans-serif;
+    --reserved-color: #3498db; /* 预约车位的颜色 - 修改为蓝色 */
+    --waiting-color: #e67e22; /* 等待用户到达的颜色 */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: #f7f9fc;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 100%;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+/* 头部样式 */
+header {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+#time-display {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+/* 用户状态区域样式 */
+#user-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    width: 100%;
+}
+
+#user-status button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#user-status button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+#logout-button {
+    background-color: var(--danger-color) !important;
+}
+
+#logout-button:hover {
+    background-color: #c0392b !important;
+}
+
+#my-reservation-button {
+    background-color: var(--reserved-color);
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#my-reservation-button:hover {
+    background-color: #2980b9;
+}
+
+/* 楼层按钮底部固定 */
+.floor-buttons-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    padding: 10px 15px;
+    z-index: 100;
+}
+
+.floor-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 5px;
+    background-color: #f5f5f5;
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.floor-button {
+    padding: 10px 20px;
+    background-color: transparent;
+    color: var(--secondary-color);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.floor-button:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.floor-button.active {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 添加SVG图标样式 */
+.icon-parking, .icon-car, .icon-check, .icon-times, .icon-spinner {
+    display: block;
+    margin: 0 auto 5px;
+}
+
+.floor-btn .icon-parking {
+    width: 24px;
+    height: 24px;
+}
+
+.stat-item .icon-car,
+.stat-item .icon-check,
+.stat-item .icon-times,
+.stat-item .icon-reservation {
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 5px;
+}
+
+.loading .icon-spinner {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 10px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.floor-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.floor-btn.active {
+    background-color: var(--dark-color);
+    transform: translateY(0);
+}
+
+/* 信息面板 */
+.info-panel {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.current-floor {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--secondary-color);
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 15px 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.stat-item i {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.stat-item:nth-child(1) i {
+    color: var(--primary-color);
+}
+
+.stat-item:nth-child(2) i {
+    color: var(--success-color);
+}
+
+.stat-item:nth-child(3) i {
+    color: var(--danger-color);
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    width: 100%;
+}
+
+.color-red i {
+    color: #e74c3c;
+    text-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+}
+
+.color-green i {
+    color: #2ecc71;
+    text-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+}
+
+.color-blue i {
+    color: #3498db;
+    text-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+}
+
+/* 增强图标颜色效果 */
+.stat-item.color-red i {
+    color: #e74c3c !important;
+    text-shadow: 0 2px 4px rgba(231, 76, 60, 0.3);
+}
+
+.stat-item.color-green i {
+    color: #2ecc71 !important;
+    text-shadow: 0 2px 4px rgba(46, 204, 113, 0.3);
+}
+
+.stat-item.color-blue i {
+    color: #3498db !important;
+    text-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+}
+
+/* 增强卡片边框效果 */
+.stat-item.color-red {
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    border-bottom: 3px solid #e74c3c;
+    background-color: rgba(231, 76, 60, 0.03);
+    border-radius: 8px;
+}
+
+.stat-item.color-green {
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-bottom: 3px solid #2ecc71;
+    background-color: rgba(46, 204, 113, 0.03);
+    border-radius: 8px;
+}
+
+.stat-item.color-blue {
+    border: 1px solid rgba(52, 152, 219, 0.2);
+    border-bottom: 3px solid #3498db;
+    background-color: rgba(52, 152, 219, 0.03);
+    border-radius: 8px;
+}
+
+/* 停车场相关样式，使用Grid布局 */
+.parking-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    width: 100%;
+    max-width: 1200px;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+}
+
+.parking-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: auto; /* 改为自动宽度而不是100% */
+    align-items: center; /* 垂直居中 */
+}
+
+.parking-row {
+    display: grid;
+    gap: 10px;
+    justify-content: center; /* 水平居中每一行的车位 */
+    grid-auto-flow: row; /* 确保按行排列 */
+    margin: 0 auto; /* 居中 */
+}
+
+.parking-slot {
+    height: 80px;
+    width: 80px; /* 确保固定宽度 */
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.slot-number {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+}
+
+.parking-slot i {
+    font-size: 28px;
+    margin-top: 10px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.parking-slot.free {
+    background-color: #2ecc71;
+    color: white;
+    border-color: #27ae60;
+}
+
+.parking-slot.free i {
+    color: #2e7d32;
+}
+
+.parking-slot.occupied {
+    background-color: #e74c3c;
+    color: white;
+    border-color: #c0392b;
+}
+
+.parking-slot.occupied i {
+    color: #c62828;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    padding: 5px;
+}
+
+/* 超强优先级的预约车位样式 - 使用最高优先级确保样式覆盖 */
+.parking-slot.reserved,
+.parking-slot[data-status="reserved"],
+div.parking-slot.reserved,
+div.parking-slot[data-status="reserved"],
+div[class*="parking-slot"][class*="reserved"],
+div[class*="parking-slot"][data-status="reserved"],
+.parking-grid .parking-slot[data-status="reserved"],
+.parking-grid .parking-slot.reserved,
+div[id^="parking"] div[class*="slot"][data-status="reserved"],
+html body div.parking-container div.parking-grid div.parking-row div.parking-slot.reserved,
+html body div.parking-container div.parking-grid div.parking-row div.parking-slot[data-status="reserved"] {
+    background-color: #3498db !important; /* 强制使用蓝色 */
+    color: white !important;
+    border-color: #2980b9 !important; /* 深蓝色边框 */
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.6) !important; /* 蓝色阴影 */
+    z-index: 2 !important; /* 提高层级 */
+}
+
+.parking-slot.reserved i,
+.reserved-icon,
+.parking-slot[data-status="reserved"] i,
+div[class*="parking-slot"][class*="reserved"] i,
+div[class*="parking-slot"][data-status="reserved"] i,
+.parking-grid .parking-slot[data-status="reserved"] i,
+.parking-grid .parking-slot.reserved i,
+html body div.parking-container div.parking-grid div.parking-row div.parking-slot.reserved i,
+html body div.parking-container div.parking-grid div.parking-row div.parking-slot[data-status="reserved"] i {
+    color: white !important; /* 白色图标在蓝色背景上 */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important; /* 添加阴影增强可见度 */
+    background-color: transparent !important; /* 确保没有背景色 */
+    border-radius: 0 !important; /* 确保没有圆角 */
+    box-shadow: none !important; /* 确保没有盒阴影 */
+    padding: 0 !important; /* 确保没有内边距 */
+}
+
+.parking-slot.user-reservation {
+    background-color: #fff8e1;
+    border-color: #ff8f00;
+}
+
+.parking-slot.user-reservation i {
+    color: #ff8f00;
+}
+
+/* 空车位样式 */
+.parking-slot.empty {
+    background-color: #f5f5f5;
+    border: 1px dashed #ccc;
+    box-shadow: none;
+}
+
+/* 统计信息样式 */
+#parking-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    width: 100%;
+}
+
+/* 加载和错误消息 */
+.loading, .error-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    text-align: center;
+    color: #666;
+}
+
+.loading {
+    font-size: 1.2rem;
+}
+
+.error-message {
+    color: var(--danger-color);
+}
+
+.error-message i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.error-message button {
+    margin-top: 20px;
+    padding: 8px 20px;
+}
+
+/* 用户状态和预约按钮 */
+#user-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#username-display {
+    margin-right: auto;
+    font-weight: bold;
+}
+
+/* 楼层按钮样式 */
+.floor-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.floor-button {
+    padding: 8px 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.floor-button:hover {
+    background-color: #e0e0e0;
+}
+
+.floor-button.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* 响应式设计 */
+@media (min-width: 768px) {
+    .container {
+        max-width: 700px;
+        padding: 20px;
+    }
+    
+    header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .floor-btn {
+        padding: 15px 10px;
+    }
+    
+    .parking-slot {
+        width: 70px;
+        height: 90px;
+        margin: 0 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-row {
+        flex-direction: row; /* 确保在手机上仍然是两列 */
+    }
+    
+    .stat-item {
+        padding: 8px;
+    }
+    
+    .parking-slot {
+        width: 45px;
+        height: 65px;
+        font-size: 0.9rem;
+    }
+    
+    /* 调整底部楼层按钮在手机上的大小 */
+    .floor-buttons-container {
+        padding: 8px;
+    }
+    
+    .floor-btn {
+        padding: 10px 5px;
+    }
+    
+    .floor-btn .icon-parking {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* 对无障碍性的支持 */
+.floor-btn:focus {
+    outline: 3px solid rgba(52, 152, 219, 0.5);
+}
+
+/* 动画效果 */
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+.free-highlight {
+    animation: pulse 1.5s infinite;
+}
+
+.parking-slot.reserved:hover,
+.parking-slot.free:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+/* 登录相关样式 */
+#login-button, #register-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #333;
+}
+
+.reservation-details {
+    margin: 20px 0;
+}
+
+.reservation-details p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.reservation-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.cancel-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.extend-btn {
+    background-color: #3498db;
+    color: white;
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}
+
+/* 预约车位用户特殊高亮 */
+.parking-slot.user-reservation {
+    border-color: #f39c12;
+    background-color: #fff8e1;
+    box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+}
+
+/* 响应式样式调整 */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 20% auto;
+        width: 90%;
+    }
+    
+    #user-status {
+        position: relative;
+        top: auto;
+        right: auto;
+        text-align: center;
+        margin-top: 10px;
+    }
+    
+    .parking-slot {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .parking-row {
+        gap: 8px;
+    }
+    
+    .parking-container {
+        padding: 10px;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .stat-item i {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 576px) {
+    .parking-container {
+        padding: 8px 5px;
+    }
+    
+    .parking-slot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .parking-slot .slot-number {
+        font-size: 11px;
+        padding: 1px 2px;
+        top: 2px;
+        left: 2px;
+    }
+    
+    .parking-slot i {
+        font-size: 16px;
+    }
+    
+    .parking-row {
+        gap: 5px;
+    }
+    
+    .stats-row {
+        flex-wrap: wrap;
+    }
+    
+    .stat-item {
+        min-width: 100px;
+        margin-bottom: 10px;
+        padding: 10px 5px;
+    }
+    
+    .stat-value {
+        font-size: 1.2rem;
+    }
+    
+    .stat-item i {
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+}
+
+/* 用于显示登录/注册错误信息 */
+.form-error {
+    color: var(--danger-color);
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+/* 登录/注册按钮样式 */
+.login-btn, .register-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.login-btn:hover, .register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.login-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+    background-color: #2980b9;
+}
+
+.register-btn {
+    background-color: var(--success-color);
+}
+
+/* 停车场统计信息样式 */
+.parking-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* 优化车位样式 */
+.parking-slot {
+    min-height: 80px;
+    font-weight: bold;
+    border: 2px solid transparent;
+}
+
+.parking-slot.free {
+    background-color: #2ecc71;
+    color: white;
+    border-color: #27ae60;
+}
+
+.parking-slot.occupied {
+    background-color: #e74c3c;
+    color: white;
+    border-color: #c0392b;
+}
+
+.parking-slot.reserved {
+    background-color: #3498db; /* 直接使用蓝色，不使用变量 */
+    color: white;
+    border-color: #2980b9; /* 深蓝色边框 */
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.6); /* 蓝色阴影 */
+}
+
+.parking-slot .slot-number {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.parking-slot i {
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+/* 楼层部分样式 */
+.floor-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .parking-slot {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .parking-row {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .parking-slot {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .parking-slot .slot-number {
+        font-size: 12px;
+        padding: 1px 3px;
+    }
+    
+    .parking-slot i {
+        font-size: 18px;
+    }
+    
+    .parking-row {
+        gap: 6px;
+    }
+}
+
+/* 颜色样式类 */
+.color-red .stat-value,
+.color-red .stat-label,
+.color-red i {
+    color: #e74c3c;
+}
+
+.color-green .stat-value,
+.color-green .stat-label,
+.color-green i {
+    color: #2ecc71;
+}
+
+.color-blue .stat-value,
+.color-blue .stat-label,
+.color-blue i {
+    color: #3498db;
+}
+
+.color-red {
+    border-bottom: 3px solid #e74c3c;
+    background-color: rgba(231, 76, 60, 0.05);
+    border-radius: 8px;
+}
+
+.color-green {
+    border-bottom: 3px solid #2ecc71;
+    background-color: rgba(46, 204, 113, 0.05);
+    border-radius: 8px;
+}
+
+.color-blue {
+    border-bottom: 3px solid #3498db;
+    background-color: rgba(52, 152, 219, 0.05);
+    border-radius: 8px;
+}
+
+/* 刷新按钮样式 */
+.refresh-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.refresh-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.refresh-btn i {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 错误提示和重试按钮样式 */
+.error-actions {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.error-details {
+    color: #777;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.retry-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.loading.error {
+    color: #e74c3c;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* 错误通知样式 */
+.error-notice {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 10px auto;
+    padding: 10px 15px;
+    background-color: #ffebee;
+    border-left: 5px solid #f44336;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 800px;
+    color: #d32f2f;
+    font-size: 14px;
+}
+
+.error-notice i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.error-notice button {
+    margin-left: auto;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.error-notice button:hover {
+    background-color: #2980b9;
+}
+
+/* 加载消息样式 */
+.loading-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.loading-message i {
+    margin-right: 10px;
+    font-size: 1.5rem;
+} 
