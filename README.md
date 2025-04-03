@@ -2,9 +2,33 @@
 
 ## 系统概述
 
-零点跃迁停车场管理系统是一套综合性的停车场解决方案，包含两个主要组件：
-1. IoT组件(部署于边缘设备)：自动识别停车场图像中的空闲和占用车位
-2. 前端界面和后端API(部署于云端服务器)：提供用户交互、车位查询和预约等功能
+零点跃迁停车场管理系统是一套综合性的停车场解决方案，采用云边协同架构设计，主要包含以下三个层次：
+
+1. 云计算层：
+   - 采用前后端分离架构，前端使用Nginx服务器
+   - 后端采用PHP实现业务逻辑
+   - 数据持久层使用Redis和MySQL的混合存储方案
+   - 整体系统通过Docker和docker-compose进行容器化部署
+   - 部署在阿里云平台，确保系统的可扩展性和高可用性
+
+2. 边缘计算层：
+   - 部署各类智能硬件设备
+   - 支持图像、视频和摄像头实时模式
+   - 实现车位识别和状态检测
+   - 通过边缘计算降低数据传输压力
+
+3. 用户接入层：
+   - 支持多种终端设备接入（手机、平板、电脑等）
+   - 通过5G网络基站实现高速连接
+   - 提供实时车位查询、预约等功能
+
+系统特点：
+- 采用网络ACL进行访问控制，确保系统安全
+- 实现负载均衡和动态扩缩容
+- 支持数据安全管理
+- 通过光纤宽带实现高速网络连接
+
+![系统架构](https://github.com/Mateogic/parking/blob/main/assets/architecture.png?raw=true)
 
 ## 配置说明
 
@@ -205,3 +229,133 @@
 ![预约](https://raw.githubusercontent.com/Mateogic/parking/refs/heads/main/assets/img4.png)
 - 取消预约
 ![取消预约](https://raw.githubusercontent.com/Mateogic/parking/refs/heads/main/assets/img5.png)
+
+## 数据表结构
+
+系统使用MySQL数据库，包含以下几个主要数据表：
+
+### 1. 用户表 (users)
+
+**建表语句：**
+```sql
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `token` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `phone` (`phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+**表结构：**
+
+| 字段名 | 数据类型 | 约束 | 说明 |
+|:------:|:--------:|:----:|:-----|
+| **id** | int(11) | PRIMARY KEY, AUTO_INCREMENT | 用户ID，自增主键 |
+| **name** | varchar(50) | NOT NULL | 用户姓名 |
+| **phone** | varchar(20) | NOT NULL, UNIQUE | 手机号码，唯一键 |
+| **password** | varchar(255) | NOT NULL | 加密后的密码 |
+| **token** | varchar(255) | DEFAULT NULL | 用户令牌 |
+| **created_at** | timestamp | NOT NULL, DEFAULT CURRENT_TIMESTAMP | 创建时间 |
+
+---
+
+### 2. 会话表 (sessions)
+
+**建表语句：**
+```sql
+CREATE TABLE IF NOT EXISTS sessions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  session_id VARCHAR(32) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  expires_at DATETIME,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+**表结构：**
+
+| 字段名 | 数据类型 | 约束 | 说明 |
+|:------:|:--------:|:----:|:-----|
+| **id** | INT | PRIMARY KEY, AUTO_INCREMENT | 会话ID，自增主键 |
+| **user_id** | INT | NOT NULL, FOREIGN KEY | 关联用户ID |
+| **session_id** | VARCHAR(32) | NOT NULL | 会话唯一标识符 |
+| **created_at** | DATETIME | DEFAULT CURRENT_TIMESTAMP | 创建时间 |
+| **expires_at** | DATETIME | - | 过期时间 |
+
+---
+
+### 3. 预约历史表 (reservation_history)
+
+**建表语句：**
+```sql
+CREATE TABLE IF NOT EXISTS `reservation_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `slot_id` int(11) NOT NULL,
+  `reservation_time` datetime NOT NULL,
+  `reserved_until` datetime NOT NULL,
+  `cancel_time` datetime DEFAULT NULL,
+  `status` enum('active','completed','cancelled') NOT NULL DEFAULT 'active',
+  `extended_times` int(11) NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+**表结构：**
+
+| 字段名 | 数据类型 | 约束 | 说明 |
+|:------:|:--------:|:----:|:-----|
+| **id** | int(11) | PRIMARY KEY, AUTO_INCREMENT | 预约记录ID |
+| **user_id** | int(11) | NOT NULL | 用户ID |
+| **slot_id** | int(11) | NOT NULL | 车位ID |
+| **reservation_time** | datetime | NOT NULL | 预约时间 |
+| **reserved_until** | datetime | NOT NULL | 预约截止时间 |
+| **cancel_time** | datetime | DEFAULT NULL | 取消时间 |
+| **status** | enum | NOT NULL, DEFAULT 'active' | 状态：活跃/完成/取消 |
+| **extended_times** | int(11) | NOT NULL, DEFAULT '0' | 延长次数 |
+| **created_at** | timestamp | NOT NULL, DEFAULT CURRENT_TIMESTAMP | 创建时间 |
+
+---
+
+### 4. 停车场状态表 (parking_status_${层数})
+
+**建表语句：**
+```sql
+CREATE TABLE IF NOT EXISTS parking_status_${层数} (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  timestamp DATETIME NOT NULL,
+  total_slots INT NOT NULL,
+  free_slots INT NOT NULL,
+  free_positions JSON,
+  parking_rows INT,
+  parking_columns INT,
+  reservation JSON NULL,
+  source_type ENUM('image', 'video', 'camera') NOT NULL
+);
+```
+
+**表结构：**
+
+| 字段名 | 数据类型 | 约束 | 说明 |
+|:------:|:--------:|:----:|:-----|
+| **id** | INT | PRIMARY KEY, AUTO_INCREMENT | 记录ID |
+| **timestamp** | DATETIME | NOT NULL | 时间戳 |
+| **total_slots** | INT | NOT NULL | 总车位数 |
+| **free_slots** | INT | NOT NULL | 空闲车位数 |
+| **free_positions** | JSON | - | 空闲车位位置信息 |
+| **parking_rows** | INT | - | 停车场行数 |
+| **parking_columns** | INT | - | 停车场列数 |
+| **reservation** | JSON | NULL | 预约信息 |
+| **source_type** | ENUM | NOT NULL | 数据来源类型 |
+
+**注意事项：**
+- 停车场状态表根据不同层数动态创建，例如`parking_status_B1`，`parking_status_B2`等
+- `free_positions`字段存储JSON格式的空闲车位位置信息
+- `reservation`字段存储JSON格式的预约信息
+- `source_type`的枚举值包括：'image'(图片)、'video'(视频)、'camera'(摄像头)
