@@ -193,13 +193,15 @@
 
 1. 访问主页`http://服务器地址/frontend/`
 2. 查看当前各楼层停车位状态
-
+![停车场状态](https://raw.githubusercontent.com/Mateogic/parking/refs/heads/main/assets/img1.png)
 3. 注册/登录用户账号
 - 注册
-
+![注册](https://raw.githubusercontent.com/Mateogic/parking/refs/heads/main/assets/img2.png)
 - 登录
+![登录](https://raw.githubusercontent.com/Mateogic/parking/refs/heads/main/assets/img3.png)
 
 4. 预约空闲车位或取消已预约车位
 - 预约
-
+![预约](https://raw.githubusercontent.com/Mateogic/parking/refs/heads/main/assets/img4.png)
 - 取消预约
+![取消预约](https://raw.githubusercontent.com/Mateogic/parking/refs/heads/main/assets/img5.png)
